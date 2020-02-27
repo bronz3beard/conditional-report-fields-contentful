@@ -1,0 +1,10 @@
+{
+  "id": "conditional-report-fields",
+  "name": "conditional-report-fields",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Symbol",
+    "Boolean",
+    "Asset"
+  ]
+}
