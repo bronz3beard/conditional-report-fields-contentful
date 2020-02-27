@@ -40,5 +40,8 @@
     "last 5 Chrome version",
     "> 1%",
     "not ie <= 11"
-  ]
+  ],
+  "author": {
+    "name": "Rory Fairweather"
+  }  
 }
