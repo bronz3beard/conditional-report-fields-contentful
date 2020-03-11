@@ -35,7 +35,7 @@
 
 //     this.state = {
 //       hasReport: props.sdk.entry.fields.hasReport.getValue() || false,
-//       reportUrl: props.sdk.entry.fields.reportUrl.getValue(),
+//       selectedValue: props.sdk.entry.fields.selectedValue.getValue(),
 //       // reportPdf: props.sdk.entry.fields.reportPdf.getValue(),
 //     };
 //   }
@@ -57,10 +57,10 @@
 //     this.props.sdk.entry.fields.hasReport.setValue(hasReport);
 //   };
 
-//   onReportUrlChangeHandler = event => {
+//   onselectedValueChangeHandler = event => {
 //     const value = event.target.value;
-//     this.setState({ reportUrl: value });
-//     this.props.sdk.entry.fields.reportUrl.setValue(value);
+//     this.setState({ selectedValue: value });
+//     this.props.sdk.entry.fields.selectedValue.setValue(value);
 //   };
 
 //   // onReportPdfChangeHandler = event => {
@@ -72,7 +72,7 @@
 
 
 //   render() {
-//     const { hasReport, reportUrl, /*reportPdf*/ } = this.state;
+//     const { hasReport, selectedValue, /*reportPdf*/ } = this.state;
 //     return (
 //       // <Form className="f36-margin--l">
 //       <>
@@ -100,8 +100,8 @@
 //             <SectionHeading>report</SectionHeading>
 //             <TextInput
 //               testId="field-report"
-//               onChange={this.onReportUrlChangeHandler}
-//               value={reportUrl}
+//               onChange={this.onselectedValueChangeHandler}
+//               value={selectedValue}
 //             />
 //             {/* <Asset /> */}
 //           </>
@@ -130,11 +130,10 @@ import PropTypes from 'prop-types';
 import { render } from 'react-dom';
 import { 
   SectionHeading,
-  TextInput,
   FieldGroup,
   RadioButton,
   // Form,
-  Asset,
+  // Asset,
   // DropdownList
  } from '@contentful/forma-36-react-components';
 import { init } from 'contentful-ui-extensions-sdk';
@@ -152,8 +151,8 @@ export class App extends React.Component {
     super(props);
     this.state = {
       // value: props.sdk.field.getValue() || '',
-      hasReport: props.sdk.field.getValue() || false,
-      reportUrl: props.sdk.field.getValue() || '',
+      hasReport: false,
+      selectedValue: props.sdk.field.getValue() || '',
       // reportPdf: props.sdk.entry.fields.reportPdf.getValue(),
     };
   }
@@ -171,25 +170,25 @@ export class App extends React.Component {
     }
   }
 
-  onHasReportChangeHandler = event => {
-    const hasReport = event.currentTarget.value === 'yes';
-    this.setState({ hasReport });
-    this.props.sdk.field.setValue(hasReport);
+  onHasReportChangeHandler = () => {
+    const { hasReport } = this.state;
+    this.setState({ hasReport: !hasReport });
   };
 
-  // onReportUrlChangeHandler = event => {
+  // onselectedValueChangeHandler = event => {
   //   const value = event.currentTarget.value;
-  //   this.setState({ reportUrl: value });
-  //   this.props.sdk.field.reportUrl.setValue(value);
+  //   this.setState({ selectedValue: value });
+  //   this.props.sdk.field.selectedValue.setValue(value);
   // };
 
   onExternalChange = value => {
-    this.setState({ reportUrl: value });
+    this.setState({ selectedValue: value });
   };
 
-  onReportUrlChangeHandler = event => {
+  onSelectedValueChangeHandler = event => {
     const value = event.currentTarget.value;
-    this.setState({ reportUrl: value });
+    console.log("App -> value ", value)
+    this.setState({ selectedValue: value });
     if (value) {
       this.props.sdk.field.setValue(value);
     } else {
@@ -198,7 +197,10 @@ export class App extends React.Component {
   };
 
   render() {
-    const { hasReport, reportUrl, /*reportPdf*/ } = this.state;
+    const { hasReport, selectedValue, /*reportPdf*/ } = this.state;
+    console.log("App -> render -> selectedValue", selectedValue)
+    
+    console.log("TCL: App -> render -> this.props.sdk.entry", this.props.sdk.entry.fields)
     return (
       <Fragment>
         <FieldGroup row={true}>
@@ -221,13 +223,20 @@ export class App extends React.Component {
         </FieldGroup>
         {hasReport && (
           <Fragment>
-            <SectionHeading>report Url</SectionHeading>
-            <TextInput
-              testId="field-report"
-              onChange={this.onReportUrlChangeHandler}
-              value={reportUrl}
-            /> 
-            <Asset />
+            <SectionHeading>Report Type</SectionHeading>
+            <select
+              data-test-id="dropdown-editor"
+              className="Select__Select___31Z46 a11y__focus-border--default___60AXp"
+              onBlur={this.onSelectedValueChangeHandler}
+              onChange={this.onSelectedValueChangeHandler}
+            >
+              <option value="" selected disabled data-test-id="cf-ui-select-option">Choose a value</option>
+              <option value="All reports" data-test-id="cf-ui-select-option">All reports</option>
+              <option value="Annual" data-test-id="cf-ui-select-option">Annual</option>
+              <option value="Financial" data-test-id="cf-ui-select-option">Financial</option>
+              <option value="Interim" data-test-id="cf-ui-select-option">Interim</option>
+              <option value="Research" data-test-id="cf-ui-select-option">Research</option>
+            </select>
           </Fragment>
           )}
       </Fragment>
